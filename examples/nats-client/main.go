@@ -25,9 +25,10 @@ func main() {
 	}
 
 	log.Printf("Connected to Nats server at %s\n", serverAddress)
+	log.Printf("Listening to channel %s\n", channel)
+
 	// Simple Async Subscriber
 	nc.Subscribe(channel, func(m *nats.Msg) {
-		log.Printf("Listening to channel %s\n", channel)
 		log.Printf("Received a message: %s\n", string(m.Data))
 	})
 

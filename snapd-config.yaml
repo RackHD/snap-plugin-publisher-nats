@@ -2,7 +2,7 @@
 # log_level for the snap daemon. Supported values are
 # # 1 - Debug, 2 - Info, 3 - Warning, 4 - Error, 5 - Fatal.
 # # Default value is 3.
-log_level: 3
+log_level: 1
 
 control:
   # auto_discover_path sets a directory to auto load plugins on the start

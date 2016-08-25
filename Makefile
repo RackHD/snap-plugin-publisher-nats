@@ -26,3 +26,6 @@ check:
 	$(MAKE) test
 all:
 	bash -c "./scripts/build.sh $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))"
+
+docker:
+	docker build -t rackhd/golang:snap-nats .

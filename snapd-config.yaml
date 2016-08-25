@@ -1,0 +1,22 @@
+---
+# log_level for the snap daemon. Supported values are
+# # 1 - Debug, 2 - Info, 3 - Warning, 4 - Error, 5 - Fatal.
+# # Default value is 3.
+log_level: 3
+
+control:
+  # auto_discover_path sets a directory to auto load plugins on the start
+  # of the snap daemon
+  auto_discover_path: /snap/auto
+
+  # plugin_trust_level sets the plugin trust level for snapd. The default state
+  # for plugin trust level is enabled (1). When enabled, only signed plugins that can
+  # be verified will be loaded into snapd. Signatures are verifed from
+  # keyring files specided in keyring_path. Plugin trust can be disabled (0) which
+  # will allow loading of all plugins whether signed or not. The warning state allows
+  # for loading of signed and unsigned plugins. Warning messages will be displayed if
+  # an unsigned plugin is loaded. Any signed plugins that can not be verified will
+  # not be loaded. Valid values are 0 - Off, 1 - Enabled, 2 - Warning
+  plugin_trust_level: 0
+ 
+

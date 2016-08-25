@@ -8,6 +8,7 @@ import (
 	"github.com/intelsdi-x/snap/control/plugin"
 	"github.com/intelsdi-x/snap/control/plugin/cpolicy"
 	"github.com/intelsdi-x/snap/core/ctypes"
+	"github.com/nats-io/nats"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -35,7 +36,6 @@ const (
 // Publish ...
 func (p *Publisher) Publish(contentType string, content []byte, config map[string]ctypes.ConfigValue) error {
 	logger := log.New()
-
 	var metrics []plugin.MetricType
 
 	switch contentType {
@@ -50,7 +50,21 @@ func (p *Publisher) Publish(contentType string, content []byte, config map[strin
 		return fmt.Errorf("Unknown content type '%s'.", contentType)
 	}
 
-	logger.Printf("%+v\n", metrics)
+	address := config["address"].(ctypes.ConfigValueStr).Value
+
+	nc, err := nats.Connect(address)
+	defer nc.Close()
+	if err != nil {
+		fmt.Printf("\n\nCould not connect to NATS server: %s\n\n", err)
+		return err
+	}
+
+	data := fmt.Sprintf("%v", metrics)
+	err = nc.Publish("Snap", []byte(data))
+	if err != nil {
+		fmt.Printf("\n\nCould not publish to NATS server: %s\n\n", err)
+		return err
+	}
 
 	return nil
 }

@@ -25,7 +25,7 @@ import (
 	// Import the snap plugin library
 	"github.com/intelsdi-x/snap/control/plugin"
 	// Import our collector plugin implementation
-	"github.com/jfrey/snap-plugin-publisher-nats/nats"
+	"github.com/skunkworxs/snap-plugin-publisher-nats/nats"
 )
 
 func main() {

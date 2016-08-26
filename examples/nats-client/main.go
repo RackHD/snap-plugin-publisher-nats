@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"runtime"
+	"time"
 
 	"github.com/nats-io/nats"
 )
@@ -17,10 +18,20 @@ func init() {
 
 func main() {
 	flag.Parse()
+	var err error
+	var nc *nats.Conn
 
-	nc, err := nats.Connect(serverAddress)
+	for i := 0; i < 5; i++ {
+		nc, err = nats.Connect(serverAddress)
+		if err == nil {
+			break
+		}
+		log.Printf("Could not connect to Nats server. Retrying in 1s\n")
+		time.Sleep(1 * time.Second)
+	}
+
 	if err != nil {
-		log.Printf("Could not connect to Nats server: %s\n", err)
+		log.Printf("Could not connect to Nats server at %s: %s\n", serverAddress, err)
 		return
 	}
 

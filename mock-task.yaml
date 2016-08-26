@@ -3,6 +3,7 @@
   schedule: 
     type: "simple"
     interval: "1s"
+  max-failures: 10
   workflow: 
     collect: 
       metrics: 
@@ -12,13 +13,17 @@
       config: 
         /intel/mock: 
           name: "root"
-          password: "secret"
+          password: "secret"          
       process: 
         - 
           plugin_name: "passthru"
+          config:
+            debug: true
           process: null
           publish: 
             - 
-              plugin_name: "file"
+              plugin_name: "nats"
               config: 
-                file: "/tmp/snap_published_mock_file.log"
+                debug: true
+                address: "nats://nats-server:4222"
+                channel: "Snap"

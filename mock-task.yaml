@@ -27,3 +27,4 @@
                 debug: true
                 address: "nats://nats-server:4222"
                 channel: "Snap"
+                encoding: "json"

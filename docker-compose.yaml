@@ -2,15 +2,12 @@ version: "2"
 
 services:
   nats-server:
-    build:
-      context: ./examples/nats-server
-      dockerfile: Dockerfile
-    image: "rackhd/nats:server"
+    image: "nats:latest"
     container_name: "nats-server"
     expose:
       - "4222"
     hostname: nats-server
-    command: "-a nats-server"
+    command: "gnatsd"
   
   nats-client:
     build:

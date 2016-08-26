@@ -26,4 +26,4 @@
               config: 
                 debug: true
                 address: "nats://nats-server:4222"
-                channel: "snap"
+                channel: "Snap"

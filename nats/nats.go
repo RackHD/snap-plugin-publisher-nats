@@ -51,6 +51,7 @@ func (p *Publisher) Publish(contentType string, content []byte, config map[strin
 	}
 
 	address := config["address"].(ctypes.ConfigValueStr).Value
+	channel := config["channel"].(ctypes.ConfigValueStr).Value
 
 	nc, err := nats.Connect(address)
 	if err != nil {
@@ -60,7 +61,7 @@ func (p *Publisher) Publish(contentType string, content []byte, config map[strin
 
 	defer nc.Close()
 	data := fmt.Sprintf("%v", metrics)
-	err = nc.Publish("Snap", []byte(data))
+	err = nc.Publish(channel, []byte(data))
 	if err != nil {
 		fmt.Printf("\n\nCould not publish to NATS server: %s\n\n", err)
 		return err

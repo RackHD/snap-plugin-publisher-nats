@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+  nats-server:
+    build:
+      context: ./examples/nats-server
+      dockerfile: Dockerfile
+    image: "rackhd/nats:server"
+    container_name: "nats-server"
+    ports:
+      - "4222:4222"
+    hostname: nats-server
+    command: "-a 127.0.0.1"
+  
+  nats-client:
+    build:
+      context: ./examples/nats-client
+      dockerfile: Dockerfile
+    image: "rackhd/nats:client"
+    container_name: "nats-client"
+    ports:
+      - "4222:4222"
+    hostname: nats-client
+    command: "--server-address nats://localhost:4222 --channel Snap"
+    depends_on:
+      - nats-server
+  
+  snap-nats:
+    image: "rackhd/golang:snap-nats"
+    container_name: "snap-nats"
+    ports:
+      - "4222:4222"
+    hostname: snap-nats
+    depends_on:
+      - nats-server

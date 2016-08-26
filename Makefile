@@ -29,3 +29,6 @@ all:
 
 docker:
 	docker build -t rackhd/golang:snap-nats .
+	make -C ./examples/nats-client
+	docker build -t rackhd/nats:client ./examples/nats-client
+	docker build -t rackhd/nats:server ./examples/nats-server

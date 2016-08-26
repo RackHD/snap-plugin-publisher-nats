@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
     image: "rackhd/nats:server"
     container_name: "nats-server"
-    ports:
-      - "4222:4222"
+    expose:
+      - "4222"
     hostname: nats-server
-    command: "-a 127.0.0.1"
+    command: "-a nats-server"
   
   nats-client:
     build:
@@ -18,18 +18,22 @@ services:
       dockerfile: Dockerfile
     image: "rackhd/nats:client"
     container_name: "nats-client"
-    ports:
-      - "4222:4222"
+    expose:
+      - "4222"
     hostname: nats-client
-    command: "--server-address nats://localhost:4222 --channel Snap"
+    command: "--server-address nats://nats-server:4222 --channel Snap"
+    links:
+      - nats-server
     depends_on:
       - nats-server
   
   snap-nats:
     image: "rackhd/golang:snap-nats"
     container_name: "snap-nats"
-    ports:
-      - "4222:4222"
+    expose:
+      - "4222"
     hostname: snap-nats
+    links:
+      - nats-server
     depends_on:
       - nats-server

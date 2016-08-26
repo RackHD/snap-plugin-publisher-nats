@@ -25,5 +25,5 @@
               plugin_name: "nats"
               config: 
                 debug: true
-                address: "nats://localhost:4222"
+                address: "nats://nats-server:4222"
                 channel: "snap"

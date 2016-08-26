@@ -52,21 +52,40 @@ func (p *Publisher) Publish(contentType string, content []byte, config map[strin
 
 	address := config["address"].(ctypes.ConfigValueStr).Value
 	channel := config["channel"].(ctypes.ConfigValueStr).Value
+	encoding := config["encoding"].(ctypes.ConfigValueStr).Value
 
+	// Server Connection
 	nc, err := nats.Connect(address)
 	if err != nil {
-		fmt.Printf("\n\nCould not connect to NATS server: %s\n\n", err)
+		fmt.Printf("Could not connect to NATS server: %s\n\n", err)
 		return err
 	}
-
 	defer nc.Close()
-	data := fmt.Sprintf("%v", metrics)
-	err = nc.Publish(channel, []byte(data))
-	if err != nil {
-		fmt.Printf("\n\nCould not publish to NATS server: %s\n\n", err)
-		return err
-	}
 
+	// Connection encoding
+	var c *nats.EncodedConn
+
+	c, err = nats.NewEncodedConn(nc, encoding)
+	if err != nil {
+		fmt.Printf("Could not encode Nats connection with encoding type %s: %s \n\n", encoding, err)
+		fmt.Printf("Using default encoding\n\n")
+
+		c, err = nats.NewEncodedConn(nc, nats.DEFAULT_ENCODER)
+		if err != nil {
+			fmt.Printf("Could not encode Nats connection with default encoding type: %s \n\n", err)
+			return err
+		}
+	}
+	defer c.Close()
+
+	//data := fmt.Sprintf("%v", metrics)
+	for _, metric := range metrics {
+		err = c.Publish(channel, metric)
+		if err != nil {
+			fmt.Printf("Could not publish to NATS server: %s\n\n", err)
+			return err
+		}
+	}
 	return nil
 }
 
@@ -88,6 +107,13 @@ func (p *Publisher) GetConfigPolicy() (*cpolicy.ConfigPolicy, error) {
 	}
 	channel.Description = "Nats Channel"
 	config.Add(channel)
+
+	encoding, err := cpolicy.NewStringRule("encoding", true)
+	if err != nil {
+		return nil, err
+	}
+	encoding.Description = "Nats Encoding"
+	config.Add(encoding)
 
 	cp.Add([]string{""}, config)
 

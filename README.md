@@ -1,11 +1,15 @@
 # snap-plugin-publisher-nats  
 
 ## Using Docker  
-The following steps start and run 3 containers: (1) Snap, with this Nats publisher plugin, (2) a Snap server for the plugin to publish to, and (3) a Snap client to listen to the server  
+The following steps start and run 3 containers: (1) Snap, with this Nats publisher plugin, (2) a Nats server for the plugin to publish to, and (3) a Nats client to listen to the server  
 
 1. `make`
 2. `make docker`
 3. `docker-compose up`
+
+
+If you want to run Snap with this plugin directly on a host, and not in a container, use the remainder of this README.  
+
 
 ## Starting a Nats server  
 1. `go get github.com/nats-io/gnatsd`  
